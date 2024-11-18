@@ -1,0 +1,100 @@
+@startuml "test 1"
+!define WorkType enum
+!define Task class
+!define VM_Area class
+!define WaitQueue class
+!define Pointer void*
+!define Cookie void*
+
+class BinderProc {
+    +pid : int
+    +tsk : Task
+    +vma : VM_Area
+    +wait : WaitQueue
+    +todo : BinderWorkQueue
+    +delivered_death : BinderWorkQueue
+    +threads : List<BinderThread>
+    +nodes : List<BinderNode>
+    +refs : List<BinderRef>
+    +buffers : List<BinderBuffer>
+    +debug_id : int
+}
+
+class BinderThread {
+    +pid : int
+    +proc : BinderProc
+    +transaction_stack : BinderTransaction
+    +todo : BinderWorkQueue
+    +wait : WaitQueue
+}
+
+class BinderTransaction {
+    +debug_id : int
+    +from_proc : BinderProc
+    +to_proc : BinderProc
+    +from_thread : BinderThread
+    +to_thread : BinderThread
+    +buffer : BinderBuffer
+    +sender_euid : int
+}
+
+class BinderBuffer {
+    +data_size : int
+    +offsets_size : int
+    +transaction : BinderTransaction
+    +data : Pointer
+    +target_node : BinderNode
+}
+
+class BinderNode {
+    +debug_id : int
+    +ptr : Pointer
+    +cookie : Cookie
+    +proc : BinderProc
+    +refs : List<BinderRef>
+    +death : List<BinderRefDeath>
+}
+
+class BinderRef {
+    +desc : int
+    +node : BinderNode
+    +proc : BinderProc
+    +death : BinderRefDeath
+}
+
+class BinderRefDeath {
+    +work : BinderWork
+    +cookie : Cookie
+}
+
+class BinderWork {
+    +type : WorkType
+    +entry : List<BinderWork>
+}
+
+class BinderWorkQueue {
+    +list : List<BinderWork>
+}
+
+BinderProc "1" o-- "many" BinderThread
+BinderProc "1" o-- "many" BinderNode
+BinderProc "1" o-- "many" BinderRef
+BinderProc "1" o-- BinderWorkQueue
+
+BinderThread "many" *-- BinderTransaction
+BinderThread "1" o-- BinderWorkQueue
+
+BinderTransaction "1" o-- BinderBuffer
+BinderTransaction "1" o-- BinderNode
+
+BinderBuffer "1" o-- BinderNode
+
+BinderNode "1" o-- BinderRef
+BinderNode "1" o-- BinderRefDeath
+
+BinderRef "1" o-- BinderNode
+BinderRef "1" o-- BinderRefDeath
+
+BinderRefDeath "1" o-- BinderWork
+BinderWorkQueue "1" o-- BinderWork
+@enduml

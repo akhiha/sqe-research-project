@@ -1,0 +1,34 @@
+@startuml "test 1"
+package "Argo CD System" {
+  class APIController {
+    +handleRequest(request: HTTPRequest): HTTPResponse
+  }
+
+  class AuthManager {
+    +authorize(user: User, action: String, resource: String): boolean
+  }
+
+  class RepoServer {
+    +fetchAppDetails(repoUrl: String): AppDetails
+    +validateRepoUrl(repoUrl: String): boolean
+  }
+
+  class FileSystem {
+    +readFile(path: String): FileContent
+  }
+
+  class Logger {
+    +logEvent(event: String): void
+  }
+
+  class ErrorHandler {
+    +handleError(error: Exception): HTTPResponse
+  }
+}
+
+APIController --> AuthManager : authorize(user, action, resource)
+APIController --> RepoServer : fetchAppDetails(repoUrl)
+RepoServer --> FileSystem : readFile(path)
+RepoServer --> Logger : logEvent(event)
+RepoServer --> ErrorHandler : handleError(error)
+@enduml

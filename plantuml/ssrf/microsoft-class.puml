@@ -1,0 +1,63 @@
+@startuml "test 1"
+package "Microsoft Exchange Server" {
+  
+  class HttpRequestHandler {
+    +handleRequest(request: HttpRequest): HttpResponse
+  }
+
+  class AuthenticationManager {
+    +authenticate(request: HttpRequest): boolean
+  }
+
+  class SSRFValidator {
+    +validateURL(url: String): boolean
+  }
+
+  class URLFetcher {
+    +fetchContent(url: String): String
+  }
+
+  class InternalServiceHandler {
+    +processRequest(request: InternalRequest): InternalResponse
+  }
+
+  class LoggingService {
+    +logEvent(event: String): void
+  }
+
+  class ErrorHandler {
+    +handleError(error: Exception): HttpResponse
+  }
+  
+  class HttpRequest {
+    +url: String
+    +headers: Map<String, String>
+    +body: String
+  }
+
+  class HttpResponse {
+    +statusCode: int
+    +body: String
+  }
+
+  class InternalRequest {
+    +targetService: String
+    +parameters: Map<String, String>
+  }
+
+  class InternalResponse {
+    +status: int
+    +data: String
+  }
+}
+
+HttpRequestHandler --> AuthenticationManager : authenticate(request)
+HttpRequestHandler --> SSRFValidator : validateURL(url)
+SSRFValidator --> URLFetcher : fetchContent(url)
+URLFetcher --> InternalServiceHandler : processRequest(request)
+URLFetcher --> LoggingService : logEvent(event)
+HttpRequestHandler --> ErrorHandler : handleError(error)
+URLFetcher --> InternalServiceHandler : fetch internal content
+InternalServiceHandler --> InternalResponse
+LoggingService --> InternalRequest : log unauthorized access
+@enduml

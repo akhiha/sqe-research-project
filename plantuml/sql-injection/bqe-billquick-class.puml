@@ -1,0 +1,26 @@
+@startuml "Test 4"
+package "BQE BillQuick Web Suite" {
+  class LoginHandler {
+    +AuthenticateUser(username: String, password: String): bool
+  }
+
+  class SQLQueryBuilder {
+    +BuildQuery(username: String, password: String): String
+  }
+
+  class DatabaseExecutor {
+    +ExecuteQuery(query: String): ResultSet
+  }
+}
+
+package "Database" {
+  class UsersTable {
+    +Username: String
+    +Password: String
+  }
+}
+
+LoginHandler --> SQLQueryBuilder : AuthenticateUser(username, password)
+SQLQueryBuilder --> DatabaseExecutor : BuildQuery(username, password)
+DatabaseExecutor --> UsersTable : ExecuteQuery(query)
+@enduml

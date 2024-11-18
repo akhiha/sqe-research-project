@@ -1,0 +1,177 @@
+@startuml "test 4"
+
+class GameMain {
+  - ArrayList<int> levelsUnlocked
+  - ArrayList<Game> gameStates
+  - void exitGame()
+  - void SaveGame(Game g)
+  - Game ReloadGame()
+  - void StartGame()
+  - void StartLevel()
+}
+
+class Player {
+  - String playerName
+  - int levelNumber
+  - ArrayList<Plant> unlockedPlants
+  - ArrayList<Plant> getUnlockedPlants()
+  - void unlockPlant(Plant p)
+  - void collectSun()
+  - void selectPlant()
+  - int[] placePlant()
+  - int getLevel()
+}
+
+class Level {
+  - int levelNumber
+  - String levelName
+  - boolean completed
+  - void startLevel()
+  - void loadNextLevel()
+  - boolean isLevelComplete()
+}
+
+class Yard {
+  - int width
+  - int height
+  - Plant[][] grid
+  - void initializeYard()
+  - void placePlant(Plant p, int x, int y)
+  - boolean isSpotAvailable(int x, int y)
+}
+
+class PlantCannotBePlacedException {
+  + String getMessage()
+}
+
+class PlantCannotBeBoughtException {
+  + String getMessage()
+}
+
+class Pea {
+  - int damage
+  - int speed
+  + void hitTarget(Zombie z)
+}
+
+class GameElements {
+  # String type
+  + String getType()
+}
+
+class LawnMower {
+  - int speed
+  - int[] position
+  - void move()
+  - void killZombie(Zombie z)
+  - int[] getPosition()
+  - void moveOutOfLawn()
+}
+
+class Character {
+  # int hp
+  + void setHP(int hp)
+  + int getHP()
+}
+
+class Sun {
+  - int value
+  + int getValue()
+}
+
+class Plant {
+  # int cost
+  # int health
+  # int[] position
+  + void setHealth(int health)
+  + void place(int x, int y)
+}
+
+class Shooter {
+  # int fireRate
+  + void shoot(Zombie z)
+}
+
+class Barrier {
+  - int durability
+  + void absorbDamage(int damage)
+}
+
+class SunPlant {
+  + int generateSun()
+}
+
+class Bomb {
+  # int damageRadius
+  + void explode()
+}
+
+class PeaShooter {
+  + void shoot(Zombie z)
+}
+
+class Repeater {
+  + void shootTwice(Zombie z)
+}
+
+class WallNut {
+  + void absorbDamage(int damage)
+}
+
+class Sunflower {
+  + int generateSun()
+}
+
+class CherryBomb {
+  + void explode()
+}
+
+class Jalapeno {
+  + void burnRow(int row)
+}
+
+class Zombie {
+  # int speed
+  # int hp
+  # int[] position
+  # int attackPower
+  + void move()
+  + void attack(Plant p)
+  + void takeDamage(int damage)
+}
+
+class NormalZombie {
+  + void walk()
+}
+
+class ConeZombie {
+  - boolean hasCone
+  + void removeCone()
+}
+
+class BucketZombie {
+  - boolean hasBucket
+  + void removeBucket()
+}
+
+interface Serializable
+
+GameMain --> Player
+Player --> Plant
+Yard --> Plant
+PlantCannotBePlacedException <|-- Plant
+PlantCannotBeBoughtException <|-- Plant
+Shooter <|-- PeaShooter
+Shooter <|-- Repeater
+Barrier <|-- WallNut
+SunPlant <|-- Sunflower
+Bomb <|-- CherryBomb
+Bomb <|-- Jalapeno
+Zombie <|-- NormalZombie
+Zombie <|-- ConeZombie
+Zombie <|-- BucketZombie
+Plant <|-- Shooter
+Plant <|-- SunPlant
+Plant <|-- Bomb
+
+@enduml

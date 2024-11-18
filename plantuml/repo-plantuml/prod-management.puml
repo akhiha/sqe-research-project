@@ -1,4 +1,4 @@
-@startuml
+@startuml "test 6"
 
 package "Config_Settings_py" {
     [Authentication] as A1

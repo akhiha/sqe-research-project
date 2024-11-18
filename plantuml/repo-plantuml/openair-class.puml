@@ -1,0 +1,101 @@
+@startuml "test 2"
+
+' Classes with their variables and methods
+class "GTPU_L4_Stack" {
+    + sendGpdu(peerAddr: struct in_addr, tunnelId: uint32_t, sendBuffer: char*, numBytes: ssize_t) : void
+}
+
+class "UDP_Application" {
+    + handleReceive(recvBuffer: char*, bytesTransferred: std::size_t, endpoint: r_endpoint) : void
+}
+
+class "UDP_Server" {
+    + start() : void
+    + stop() : void
+}
+
+class "PCFP_L4_Stack" {
+    + configureStack() : void
+}
+
+class "SPGWU_S1U" {
+    + spgwuTask() : void
+    + sendToCore(ipPacket: char*, len: ssize_t) : void
+    - upSeid2PfcpSessions : HashMap
+    - cpFseid2PfcpSessions : HashMap
+    - ulS1uTeid2PfcpPdr : HashMap
+}
+
+class "SPGWU_App" {
+    + spgwuAppTask() : void
+    + handleMsg(msg: itti_sxab_session_establishment_response) : void
+}
+
+class "SPGWU_SX" {
+    + spgwuSxTask() : void
+}
+
+class "PFCP_Switch" {
+    + pdnReadLoop(schedParams: util::thread_sched_params) : void
+    + setupPdnInterfaces() : void
+    + createPdnSocket(ifname: char*, promisc: bool, ifIndex: int&) : void
+    + pfcpSessionLookUpPackInAccess(iph: struct iphdr*, numBytes: std::size_t, rEndpoint: endpoint&, tunnelId: uint32_t) : void
+    + getPfcpUlPdrsByUpTeid(teid: teid_t, pdrs: vector) : void
+    + handlePfcpSessionEstablishmentRequest(request: itti_sxab_session_establishment_request, response: itti_sxab_session_establishment_response) : void
+}
+
+class "PFCP_Session" {
+    + addFar(far: pfcp::pfcp_far) : void
+    + createPdr(crPdr: pfcp::create_pdr, cause: pfcp::cause_t, offendingIe: uint16_t, allocatedFteid: pfcp::fteid_t) : void
+    + getFar() : pfcp::pfcp_far
+}
+
+class "PFCP_PDR" {
+    + lookUpPackInAccess(iphrd: struct iphdr*, numBytes: size_t, rEndpoint: endpoint, tunnelId: uint32_t) : void
+    + getPfcpSessionByUpSeid(cpSeid: uint64_t, session: PFCP_Session) : void
+}
+
+class "PFCP_FAR" {
+    + applyForwardingRules() : void
+}
+
+class "Main" {
+    + main() : void
+    + start() : void
+    + timerManagerTask(schedParams: util::thread_sched_params) : void
+    + receiveMsg(taskId: task_id_t) : void
+}
+
+class "ITTI_MW" {
+    + createTask(taskId: task_id_t, startRoutine: void (*f)(void)) : void
+}
+
+class "SPGWU_Config" {
+    + loadConfig() : void
+}
+
+class "Async_Shell_Cmd" {
+    + execute() : void
+}
+
+' Relationships between classes
+GTPU_L4_Stack *-- UDP_Server
+UDP_Server ..> UDP_Application : <<Dependency>>
+SPGWU_S1U <|-- GTPU_L4_Stack
+SPGWU_SX <|-- PCFP_L4_Stack
+SPGWU_App *-- SPGWU_SX
+SPGWU_App *-- SPGWU_S1U
+PCFP_L4_Stack *-- UDP_Server
+SPGWU_App *-- PFCP_Switch
+PFCP_Switch o-- PFCP_Session
+PFCP_Session o-- PFCP_PDR
+PFCP_Session o-- PFCP_FAR
+Main ..> SPGWU_App : <<Dependency>>
+Main ..> ITTI_MW : <<Dependency>>
+Main ..> SPGWU_Config : <<Dependency>>
+Main ..> Async_Shell_Cmd : <<Dependency>>
+GTPU_L4_Stack <|-- UDP_Application
+PCFP_L4_Stack <|-- UDP_Application
+SPGWU_S1U --> PFCP_Switch : <<Unidirectional Association>>
+
+@enduml
