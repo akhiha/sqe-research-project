@@ -1,0 +1,31 @@
+@startuml "Commerce"
+package "E-Commerce Platform" {
+  class User {
+    +id: UUID
+    +username: String
+    +password: String
+  }
+
+  class Product {
+    +id: UUID
+    +name: String
+    +price: Float
+  }
+
+  class Order {
+    +id: UUID
+    +userId: UUID
+    +totalAmount: Float
+  }
+
+  class Payment {
+    +id: UUID
+    +orderId: UUID
+    +paymentStatus: String
+  }
+
+  User --> Order : "places"
+  Order --> Product : "fetches"
+  Order --> Payment : "initiates"
+}
+@enduml

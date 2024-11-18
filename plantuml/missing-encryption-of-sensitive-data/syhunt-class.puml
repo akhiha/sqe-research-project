@@ -1,0 +1,48 @@
+@startuml "Syhunt"
+package "Client Side" {
+  class User {
+    +sessionID: String
+    +isAuthenticated: Boolean
+    +sendRequest(url: String): void
+  }
+
+  class Browser {
+    +renderPage(): void
+    +executeScript(script: String): void
+    +submitRequest(url: String, params: Map): void
+  }
+}
+
+package "Server Side" {
+  class WebApplication {
+    +validateRequest(request: HttpRequest): Boolean
+    +executeCommand(command: String): void
+    +processRequest(request: HttpRequest): HttpResponse
+    -verifyCSRFToken(request: HttpRequest): Boolean
+  }
+
+  class CommandExecutor {
+    +runCommand(command: String): String
+  }
+
+  class Authenticator {
+    +verifySession(sessionID: String): Boolean
+    +isAuthenticated(sessionID: String): Boolean
+  }
+}
+
+package "Threat Actor" {
+  class Attacker {
+    +craftMaliciousPage(): void
+    +injectCommand(command: String): void
+  }
+}
+
+User -> Browser : sendRequest(url)
+Browser -> WebApplication : submitRequest(url, params)
+WebApplication -> Authenticator : verifySession(sessionID)
+Authenticator --> WebApplication : isAuthenticated
+WebApplication -> CommandExecutor : executeCommand(command)
+CommandExecutor --> WebApplication : result
+Attacker ..> Browser : craftMaliciousPage
+Attacker ..> WebApplication : injectCommand

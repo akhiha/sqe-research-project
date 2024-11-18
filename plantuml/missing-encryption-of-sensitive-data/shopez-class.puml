@@ -1,0 +1,35 @@
+@startuml "ShopEZ_Server Class Diagram"
+class User {
+  +username: String
+  +password: String
+  +authenticate(): Boolean
+}
+
+class CookieManager {
+  +setCookie(key: String, value: String): void
+  +getCookie(key: String): String
+  -encrypt(value: String): String
+}
+
+class ShopEZ_Server {
+  +login(username: String, password: String): Boolean
+  +authenticateWithCookie(cookie: String): Boolean
+  -generateSessionToken(): String
+}
+
+class Browser {
+  +storeCookie(key: String, value: String): void
+  +readCookie(key: String): String
+}
+
+class Attacker {
+  +injectMaliciousScript(): void
+  +stealCookie(): String
+}
+
+User --> ShopEZ_Server : sends credentials
+ShopEZ_Server --> CookieManager : stores session in cookie
+CookieManager --> Browser : sets cookie
+Browser --> Attacker : leaks cookie (via XSS)
+Attacker --> ShopEZ_Server : replays stolen cookie
+ShopEZ_Server --> Attacker : grants access

@@ -1,0 +1,23 @@
+@startuml "Modicon Correct"
+class ClientApplication {
+  +connectToServer(serverIP: String): void
+  +sendEncryptedCredentials(username: String, password: String): void
+  -encryptData(data: String): String
+  -storeInEncryptedBuffer(data: String): void
+  +receiveEncryptedData(): String
+}
+
+class Server {
+  +acceptSecureConnection(clientIP: String): void
+  +validateEncryptedCredentials(encryptedData: String): Boolean
+  -decryptData(data: String): String
+}
+
+class SecureNetwork {
+  +transmitEncryptedData(data: String): void
+  +establishTLSConnection(): void
+}
+
+ClientApplication -> SecureNetwork : transmitEncryptedData(encryptedCredentials)
+SecureNetwork -> Server : transmitEncryptedData(encryptedCredentials)
+Server --> ClientApplication : send encrypted response
