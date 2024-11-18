@@ -1,0 +1,77 @@
+@startuml
+
+package "Config_Settings_py" {
+    [Authentication] as A1
+    [File Handling] as A2
+    [Networking] as A3
+
+    A1 --> A2 : Uses
+    A1 --> Hardcoded_Passwords_and_ENV_Mismanagement : Vulnerabilities
+    A3 --> API : Rate Limiting
+}
+
+package "DB_Utils_py" {
+    [Database] as B1
+    [Authentication] as B2
+
+    B1 --> B2 : Interactions
+    B1 --> SQL_Injection : Potential Vulnerabilities
+    B2 --> Config_Settings_py : Depends
+}
+
+package "Routes_Auth_py" {
+    [Database] as C1
+    [Authentication] as C2
+    [Networking] as C3
+
+    C1 --> SQL_Injection : SQL Query Execution
+    C2 --> B2 : Depends
+    C3 --> Networking : JWT Usage
+    C3 --> SSRF : Improper Request Validation
+}
+
+package "Routes_Products_py" {
+    [Database] as D1
+    [File Handling] as D2
+    [Networking] as D3
+
+    D1 --> SQL_Injection : SQL Query Execution
+    D2 --> Command_Injection : File Upload
+    D3 --> SSRF : Request Handling
+}
+
+package "Payment_Service_py" {
+    [Database] as E1
+    [Networking] as E2
+
+    E1 --> SQL_Injection : SQL Query Execution
+    E2 --> Command_Injection : Request Execution
+}
+
+package "Email_Service_py" {
+    [Database] as F1
+    [File Handling] as F2
+    [Networking] as F3
+
+    F1 --> Path_Traversal : SMTP Login
+    F2 --> File_Exposure : Log Writing
+    F3 --> SSRF : Template Retrieval
+}
+
+package "Storage_Service_py" {
+    [File Handling] as G1
+    [Networking] as G2
+
+    G1 --> Path_Traversal : File Read/Write
+    G2 --> SSRF : External File Access
+}
+
+Config_Settings_py --> DB_Utils_py
+DB_Utils_py --> Routes_Auth_py
+Routes_Auth_py --> Routes_Products_py
+Routes_Auth_py --> Payment_Service_py
+Routes_Products_py --> Email_Service_py
+Routes_Products_py --> Storage_Service_py
+Payment_Service_py --> Storage_Service_py
+
+@enduml

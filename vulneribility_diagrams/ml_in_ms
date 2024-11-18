@@ -1,0 +1,76 @@
+@startuml
+package "Order Management Service" {
+  entity "Database" as OM_DB
+  entity "Authentication" as OM_Auth
+  entity "File Handling" as OM_File
+  entity "Networking" as OM_Net
+  entity "SQL Injection" as OM_SQL
+  OM_DB --> OM_SQL
+  OM_File --> OM_Net
+}
+
+package "Payment Management Service" {
+  entity "Database" as PM_DB
+  entity "Authentication" as PM_Auth
+  entity "Networking" as PM_Net
+  entity "SQL Injection" as PM_SQL
+  PM_DB --> PM_SQL
+}
+
+package "Dashboard Service" {
+  entity "Database" as DS_DB
+  entity "Authentication" as DS_Auth
+  entity "Networking" as DS_Net
+  entity "SSRF Vulnerability" as DS_SSRF
+  DS_Net --> DS_SSRF
+}
+
+package "Product Management Service" {
+  entity "Database" as PRM_DB
+  entity "Authentication" as PRM_Auth
+  entity "Networking" as PRM_Net
+  entity "SQL Injection" as PRM_SQL
+  PRM_DB --> PRM_SQL
+}
+
+package "Inventory Management Service" {
+  entity "Database" as INV_DB
+  entity "Authentication" as INV_Auth
+  entity "File Handling" as INV_File
+  entity "Networking" as INV_Net
+  entity "SQL Injection" as INV_SQL
+  entity "Path Traversal" as INV_Path
+  INV_DB --> INV_SQL
+  INV_File --> INV_Path
+}
+
+package "Customer Management Service" {
+  entity "Database" as CUS_DB
+  entity "Authentication" as CUS_Auth
+  entity "Networking" as CUS_Net
+  entity "SQL Injection" as CUS_SQL
+  CUS_DB --> CUS_SQL
+}
+
+package "Tools - Simulate API Requests" {
+  entity "File Handling" as TOOLS_SAR_File
+  entity "Networking" as TOOLS_SAR_Net
+  entity "Path Traversal" as TOOLS_SAR_Path
+  TOOLS_SAR_File --> TOOLS_SAR_Path
+}
+
+package "Tools - Performance Monitor" {
+  entity "File Handling" as TOOLS_PM_File
+  entity "Networking" as TOOLS_PM_Net
+  entity "Path Traversal" as TOOLS_PM_Path
+  TOOLS_PM_File --> TOOLS_PM_Path
+}
+
+package "Tools - PAD" {
+  entity "File Handling" as TOOLS_PAD_File
+}
+
+package "Tools - PBW" {
+  entity "File Handling" as TOOLS_PBW_File
+}
+@enduml

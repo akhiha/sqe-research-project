@@ -1,0 +1,168 @@
+@startuml
+package "Security Architecture Analysis Report" {
+    node "./pinax-stripe-light/makemigrations.py" {
+        component "File_Handling" {
+            [Line 46]
+        }
+    }
+
+    node "./pinax-stripe-light/update_webhooks.py" {
+        component "File_Handling" {
+            [Line 25]
+            [Line 26]
+            [Line 40]
+        }
+        component "Networking" {
+            [Line 1]
+            [Line 4]
+            [Line 3]
+        }
+        component "Potential Vulnerabilities" {
+            [Path_Traversal]
+            [Ssrf]
+        }
+    }
+
+    node "./pinax-stripe-light/pinax/stripe/conf.py" {
+        component "Networking" {
+            [Line 32]
+        }
+    }
+
+    node "./pinax-stripe-light/pinax/stripe/apps.py" {
+        component "File_Handling" {
+            [Line 13]
+        }
+    }
+
+    node "./pinax-stripe-light/pinax/stripe/admin.py" {
+        component "Networking" {
+            [Line 9]
+            [Line 12]
+            [Line 19]
+            [Line 22]
+            [Line 23]
+        }
+    }
+
+    node "./pinax-stripe-light/pinax/stripe/utils.py" {
+        component "Networking" {
+            [Line 24]
+        }
+    }
+
+    node "./pinax-stripe-light/pinax/stripe/views.py" {
+        component "Networking" {
+            [Line 35]
+            [Line 36]
+            [Line 37]
+            [Line 2]
+            [Line 42]
+            [Line 44]
+            [Line 48]
+        }
+    }
+
+    node "./pinax-stripe-light/pinax/stripe/tests/test_admin.py" {
+        component "Networking" {
+            [Line 3]
+            [Line 12]
+            [Line 19]
+            [Line 21]
+            [Line 24]
+            [Line 26]
+            [Line 29]
+            [Line 30]
+            [Line 39]
+            [Line 49]
+            [Line 56]
+            [Line 57]
+            [Line 59]
+            [Line 62]
+            [Line 63]
+            [Line 65]
+            [Line 68]
+            [Line 69]
+            [Line 77]
+        }
+    }
+
+    node "./pinax-stripe-light/pinax/stripe/tests/__init__.py" {
+        component "Networking" {
+            [Line 128]
+            [Line 153]
+        }
+    }
+
+    node "./pinax-stripe-light/pinax/stripe/tests/test_views.py" {
+        component "Networking" {
+            [Line 3]
+            [Line 14]
+            [Line 20]
+            [Line 21]
+            [Line 34]
+            [Line 35]
+            [Line 46]
+            [Line 47]
+            [Line 56]
+            [Line 57]
+            [Line 65]
+            [Line 66]
+        }
+    }
+
+    node "./pinax-stripe-light/pinax/stripe/tests/test_webhooks.py" {
+        component "File_Handling" {
+            [Line 185]
+        }
+        component "Networking" {
+            [Line 106]
+            [Line 123]
+            [Line 142]
+        }
+    }
+
+    node "./pinax-stripe-light/pinax/stripe/tests/settings.py" {
+        component "Networking" {
+            [Line 36]
+        }
+    }
+
+    node "./pinax-stripe-light/pinax/stripe/tests/urls.py" {
+        component "Authentication" {
+            [Line 16]
+        }
+    }
+
+    node "./pinax-stripe-light/pinax/stripe/webhooks/generated.py" {
+        component "Database" {
+            [Line 740]
+            [Line 741]
+            [Line 742]
+        }
+        component "File_Handling" {
+            [Line 332]
+            [Line 710]
+            [Line 711]
+            [Line 712]
+            [Line 280]
+        }
+        component "Networking" {
+            [Line 400]
+            [Line 401]
+            [Line 402]
+            [Line 692]
+            [Line 697]
+            [Line 367]
+            [Line 497]
+            [Line 547]
+        }
+    }
+
+    node "./pinax-stripe-light/pinax/stripe/webhooks/base.py" {
+        component "Networking" {
+            [Line 55]
+        }
+    }
+}
+@enduml
