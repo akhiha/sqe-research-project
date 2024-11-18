@@ -1,0 +1,46 @@
+@startuml "Openwall"
+package "Client Side" {
+  class Pkcs11Tool {
+    +generateKeyPair(): KeyPair
+    -defaultModulusBits: int = 1024
+    -defaultPublicExponent: int = 1  // Vulnerable value
+  }
+
+  class KeyPair {
+    +publicKey: PublicKey
+    +privateKey: PrivateKey
+  }
+
+  class PublicKey {
+    +modulus: BigInteger
+    +exponent: int
+  }
+
+  class PrivateKey {
+    +modulus: BigInteger
+    +exponent: int
+  }
+}
+
+package "PKCS#11 Module" {
+  class OpenSCPkcs11Module {
+    +generateKeyPair(modulusBits: int, publicExponent: int): KeyPair
+    +storeKeyPair(keyPair: KeyPair): void
+  }
+
+  class ThirdPartyPkcs11Module {
+    +generateKeyPair(modulusBits: int, publicExponent: int): KeyPair
+  }
+}
+
+package "System" {
+  class SmartCard {
+    +storeKey(key: PublicKey): void
+    +retrieveKey(): PublicKey
+  }
+}
+
+Pkcs11Tool -> OpenSCPkcs11Module : uses
+Pkcs11Tool -> ThirdPartyPkcs11Module : uses (vulnerable)
+ThirdPartyPkcs11Module -> SmartCard : stores insecure key
+SmartCard --> System : key vulnerable to trivial decryption

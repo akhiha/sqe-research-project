@@ -1,0 +1,16 @@
+@startuml "Magento CVE-2019-8114"
+class AdminUser {
+  +username: String
+  +password: String
+  +uploadConfigurationArchive(file): void
+}
+
+class ConfigurationArchive {
+  +fileName: String
+  +fileContent: Blob
+  +extract(): void
+}
+
+AdminUser --> ConfigurationArchive : uploads
+ConfigurationArchive --> System : executes
+@enduml

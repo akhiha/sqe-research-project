@@ -1,0 +1,27 @@
+@startuml "Modicon M221"
+class ClientApplication {
+  +connectToServer(serverIP: String): void
+  +sendCredentials(username: String, password: String): void
+  -storeInBuffer(data: String): void
+  +receiveData(): String
+}
+
+class Server {
+  +acceptConnection(clientIP: String): void
+  +validateCredentials(username: String, password: String): Boolean
+}
+
+class Network {
+  +transmitData(data: String): void
+}
+
+class Attacker {
+  +interceptData(): String
+  +analyzeData(buffer: String): void
+}
+
+ClientApplication -> Network : transmitData(credentials)
+Network -> Server : transmitData(credentials)
+Server --> ClientApplication : send response
+Attacker ..> Network : interceptData
+Attacker ..> ClientApplication : analyzeData(buffer)

@@ -1,0 +1,60 @@
+@startuml "Virtual Clinic Class Diagram"
+package "Virtual Clinic" {
+    class User {
+        + id: UUID
+        + username: String
+        + email: String
+        --
+        + save(): void
+        + delete(): void
+        + get_full_name(): String
+    }
+    
+    class Speciality {
+        + id: UUID
+        + name: String
+        + description: Text
+        --
+        + save(): void
+        + delete(): void
+    }
+
+    class Appointment {
+        + id: UUID
+        + date: DateTime
+        + patient: User
+        + doctor: User
+        + type: String
+        --
+        + save(): void
+        + delete(): void
+        + get_duration(): int
+    }
+
+    class Prescription {
+        + id: UUID
+        + appointment: Appointment
+        + description: Text
+        --
+        + save(): void
+        + delete(): void
+        + print_prescription(): void
+    }
+
+    class MedicalTest {
+        + id: UUID
+        + patient: User
+        + test_type: String
+        + result: File
+        --
+        + save(): void
+        + delete(): void
+        + upload_result(): void
+    }
+    
+    User "1" -- "n" Appointment : "makes"
+    Appointment "1" -- "1" Prescription : "generates"
+    User "1" -- "n" MedicalTest : "takes"
+    Appointment "1" -- "1" Speciality : "has type"
+}
+@enduml

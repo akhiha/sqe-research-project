@@ -1,0 +1,14 @@
+@startuml "ShopEZ_Server"
+actor User
+participant Browser
+participant ShopEZ_Server
+actor Attacker
+
+User -> ShopEZ_Server: Login with Username & Password
+ShopEZ_Server -> Browser: Set Cookie (Plaintext Credentials)
+Browser -> Attacker: Attacker injects XSS payload
+Attacker -> Browser: Steal Cookie via malicious script
+Browser -> ShopEZ_Server: Authenticated Request using cookie
+Attacker -> ShopEZ_Server: Replay stolen credentials
+ShopEZ_Server --> Attacker: Grants Unauthorized Access
+@enduml

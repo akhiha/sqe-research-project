@@ -1,0 +1,32 @@
+@startuml "Panama papers"
+package "Client Side" {
+  class ClientApplication {
+    +connectToServer(url: String): void
+    +sendSensitiveData(data: String): void
+    -establishHttpConnection(url: String): HttpURLConnection
+    -writeDataToStream(data: String): void
+  }
+
+  class NetworkLayer {
+    +transmitData(data: String): void
+  }
+}
+
+package "Server Side" {
+  class ServerApplication {
+    +receiveData(data: String): void
+    +processData(data: String): void
+  }
+}
+
+package "Threat Actor" {
+  class Attacker {
+    +monitorNetwork(): void
+    +interceptData(): String
+  }
+}
+
+ClientApplication -> NetworkLayer : send data
+NetworkLayer -> ServerApplication : transmit unencrypted data
+Attacker ..> NetworkLayer : interceptData
+ServerApplication --> ClientApplication : send response
