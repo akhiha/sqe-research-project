@@ -1,4 +1,4 @@
-@startuml
+@startuml "test 5"
 package "Order Management Service" {
   entity "Database" as OM_DB
   entity "Authentication" as OM_Auth

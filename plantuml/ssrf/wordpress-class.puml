@@ -1,0 +1,106 @@
+@startuml "test 3"
+package "WordPress Application" {
+
+  class User {
+    +userId: String
+    +role: String
+    +submitURL(url: String): void
+    +viewResponse(): void
+  }
+
+  class WebAppController {
+    +handleRequest(request: HttpRequest): HttpResponse
+    +logRequest(request: HttpRequest): void
+    +forwardRequest(url: String): Metadata
+    +sanitizeInput(input: String): String
+  }
+
+  class URLValidator {
+    +allowedDomains: List<String>
+    +blockedIPs: List<String>
+    +isValid(url: String): boolean
+    +isInternal(url: String): boolean
+    +normalizeIP(ip: String): String
+  }
+
+  class MetadataFetcher {
+    +timeout: int
+    +maxRedirects: int
+    +fetchMetadata(url: String): Metadata
+    +followRedirects(url: String): Metadata
+    +fetchInternalData(apiPath: String): Data
+  }
+
+  class InternalService {
+    +serviceName: String
+    +availableAPIs: List<String>
+    +provideData(endpoint: String): Data
+    +logAccess(request: InternalRequest): void
+  }
+
+  class Logger {
+    +logLevel: String
+    +logEvent(event: String, level: String): void
+    +logError(error: String): void
+    +trackSuspiciousActivity(user: User): void
+  }
+
+  class ErrorHandler {
+    +errorLogPath: String
+    +handleError(error: Exception): HttpResponse
+    +notifyAdmin(error: Exception): void
+    +displayFriendlyMessage(): void
+  }
+
+  class HttpRequest {
+    +url: String
+    +headers: Map<String, String>
+    +body: String
+    +clientIP: String
+    +getParam(key: String): String
+    +setParam(key: String, value: String): void
+  }
+
+  class HttpResponse {
+    +statusCode: int
+    +body: String
+    +setHeader(key: String, value: String): void
+    +setBody(content: String): void
+    +addCookie(name: String, value: String): void
+  }
+
+  class Metadata {
+    +content: String
+    +contentType: String
+    +size: int
+    +parseMetadata(): Map<String, String>
+  }
+
+  class Data {
+    +info: String
+    +timestamp: Date
+    +formatData(): String
+  }
+
+  class InternalRequest {
+    +apiPath: String
+    +queryParams: Map<String, String>
+    +toHttpRequest(): HttpRequest
+  }
+
+  class InternalResponse {
+    +status: int
+    +responseData: String
+    +formatResponse(): Map<String, String>
+  }
+}
+
+User --> WebAppController : submits URL
+WebAppController --> URLValidator : validate URL
+WebAppController --> MetadataFetcher : fetch metadata
+MetadataFetcher --> InternalService : request internal data
+WebAppController --> Logger : log request details
+WebAppController --> ErrorHandler : handle exceptions
+Logger --> InternalService : log internal access
+MetadataFetcher --> InternalResponse : process response
+@enduml

@@ -1,0 +1,30 @@
+@startuml "test 2"
+package "Apache Accumulo" {
+  class User {
+    +username: String
+    +roles: List<String>
+    +hasPermission(permission: String): boolean
+  }
+
+  class SecurityManager {
+    +canFlush(user: User, table: String): boolean
+    +canPerformSystemActions(user: User): boolean
+  }
+
+  class TableManager {
+    +flushTable(user: User, table: String): void
+  }
+
+  class SystemManager {
+    +shutdownServer(user: User): void
+    +setSystemConfig(user: User, config: Map<String, String>): void
+  }
+}
+
+User --> SecurityManager : hasPermission(permission)
+SecurityManager --> TableManager : canFlush(user, table)
+SecurityManager --> SystemManager : canPerformSystemActions(user)
+TableManager --> SystemManager : flushTable(user, table)
+SystemManager --> SystemManager : shutdownServer(user)
+SystemManager --> SystemManager : setSystemConfig(user, config)
+@enduml

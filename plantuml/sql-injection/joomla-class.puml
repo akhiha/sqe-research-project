@@ -1,0 +1,27 @@
+@startuml "Test 2"
+package "Joomla! CMS" {
+  class UserInputHandler {
+    +processRequest(id: String): void
+  }
+
+  class SQLQueryBuilder {
+    +buildQuery(id: String): String
+  }
+
+  class DatabaseExecutor {
+    +executeQuery(query: String): ResultSet
+  }
+}
+
+package "Database" {
+  class UsersTable {
+    +id: int
+    +username: String
+    +password: String
+  }
+}
+
+UserInputHandler --> SQLQueryBuilder : processRequest(id)
+SQLQueryBuilder --> DatabaseExecutor : buildQuery(id)
+DatabaseExecutor --> UsersTable : executeQuery(query)
+@enduml

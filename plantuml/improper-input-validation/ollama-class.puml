@@ -1,0 +1,32 @@
+@startuml "Test 3"
+package "Ollama System" {
+  class APIController {
+    +handleRequest(request: HTTPRequest): HTTPResponse
+  }
+
+  class ModelManager {
+    +fetchModel(digest: String): Model
+    +validateDigest(digest: String): boolean
+  }
+
+  class FileSystemHandler {
+    +getModelPath(digest: String): String
+    +readModelFile(path: String): Model
+  }
+
+  class SecurityLogger {
+    +logEvent(event: String): void
+  }
+
+  class ErrorHandler {
+    +handleError(error: Exception): HTTPResponse
+  }
+}
+
+APIController --> ModelManager : handleRequest(request)
+ModelManager --> FileSystemHandler : fetchModel(digest)
+ModelManager --> SecurityLogger : logEvent(event)
+ModelManager --> ErrorHandler : handleError(error)
+FileSystemHandler --> SecurityLogger : logEvent(event)
+FileSystemHandler --> ErrorHandler : handleError(error)
+@enduml

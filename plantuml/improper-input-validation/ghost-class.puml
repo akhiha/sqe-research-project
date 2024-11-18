@@ -1,0 +1,39 @@
+@startuml "T"est 2
+package "User Input Module" {
+  class InputHandler {
+    +getInput(prompt: String): int
+  }
+
+  class Validator {
+    +validateInput(value: int): boolean
+  }
+}
+
+package "Game Logic" {
+  class GameBoardManager {
+    +createBoard(rows: int, cols: int): void
+  }
+}
+
+package "System Resources" {
+  class MemoryAllocator {
+    +allocate(size: int): void
+  }
+
+  class Logger {
+    +logEvent(message: String): void
+  }
+
+  class ErrorHandler {
+    +handleError(errorMessage: String): void
+  }
+}
+
+InputHandler --> Validator : validateInput(value)
+Validator --> GameBoardManager : validate and forward dimensions
+GameBoardManager --> MemoryAllocator : request memory allocation
+MemoryAllocator --> Logger : log memory operations
+MemoryAllocator --> ErrorHandler : handle allocation errors
+Validator --> ErrorHandler : handle invalid input
+ErrorHandler --> Logger : log errors
+@enduml

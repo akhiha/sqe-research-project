@@ -1,0 +1,14 @@
+@startuml "Test 3"
+package "Trend Micro Apex Central" {
+  class CertificateManager {
+    +SetCertificatesConfig(dbCert: String): void
+  }
+
+  class Database {
+    +ExecuteQuery(query: String): void
+  }
+}
+
+CertificateManager --> Database : SetCertificatesConfig(dbCert)
+Database --> "Certificates Table" : ExecuteQuery(query)
+@enduml

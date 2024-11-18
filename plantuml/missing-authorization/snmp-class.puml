@@ -1,0 +1,36 @@
+@startuml "test 3"
+package "Net-SNMP" {
+  class SNMPAgent {
+    +processRequest(request: SNMPRequest): SNMPResponse
+  }
+
+  class UDPDomain {
+    +netsnmp_udp_fmtaddr(addr: Address): String
+  }
+
+  class TCPWrapper {
+    +hosts_allow: List<String>
+    +hosts_deny: List<String>
+    +isAllowed(addr: Address): boolean
+  }
+
+  class SNMPRequest {
+    +sourceAddress: Address
+    +data: String
+  }
+
+  class SNMPResponse {
+    +data: String
+  }
+
+  class Address {
+    +ip: String
+    +port: int
+  }
+}
+
+SNMPAgent --> UDPDomain : uses
+UDPDomain --> TCPWrapper : uses
+SNMPAgent --> SNMPRequest : processes
+SNMPRequest --> Address : contains
+@enduml

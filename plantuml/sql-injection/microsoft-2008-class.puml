@@ -1,0 +1,26 @@
+@startuml "Test 1"
+package "Web Application" {
+  class UserInputHandler {
+    +processRequest(queryString: String): void
+  }
+
+  class SQLQueryBuilder {
+    +buildQuery(input: String): String
+  }
+
+  class DatabaseExecutor {
+    +executeQuery(query: String): void
+  }
+}
+
+package "Database" {
+  class ContentTable {
+    +id: int
+    +content: String
+  }
+}
+
+UserInputHandler --> SQLQueryBuilder : processRequest(queryString)
+SQLQueryBuilder --> DatabaseExecutor : buildQuery(input)
+DatabaseExecutor --> ContentTable : executeQuery(query)
+@enduml

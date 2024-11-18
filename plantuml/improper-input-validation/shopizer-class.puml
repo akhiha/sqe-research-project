@@ -1,0 +1,19 @@
+@startuml "Test 1"
+package "E-commerce Application" {
+  class ShoppingCart {
+    +addItem(productId: String, quantity: int): void
+    +calculateTotal(): double
+  }
+
+  class ProductCatalog {
+    +getProductPrice(productId: String): double
+  }
+
+  class PaymentProcessor {
+    +chargeUser(amount: double): void
+  }
+}
+
+ShoppingCart --> ProductCatalog : getProductPrice(productId)
+ShoppingCart --> PaymentProcessor : chargeUser(total)
+@enduml

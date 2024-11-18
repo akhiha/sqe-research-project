@@ -1,0 +1,38 @@
+@startuml "apache Nifi CVE-2018-7750"
+package "Application Layer" {
+  class Application {
+    +loadConfig(filePath: String): void
+    +connectToDatabase(): void
+    -decryptPassword(password: String): String
+  }
+
+  class ConfigManager {
+    +getProperty(key: String): String
+    +loadProperties(filePath: String): void
+  }
+
+  class DatabaseConnector {
+    +establishConnection(url: String, username: String, password: String): void
+  }
+}
+
+package "File System" {
+  class ConfigFile {
+    -dbUsername: String = "admin"
+    -dbPassword: String = "plaintextPassword"  // Vulnerability
+  }
+}
+
+package "Threat Actor" {
+  class MaliciousInsider {
+    +readConfigFile(filePath: String): String
+    +extractCredentials(): void
+  }
+}
+
+Application -> ConfigManager : loadConfig(filePath)
+ConfigManager -> ConfigFile : loadProperties(filePath)
+Application -> DatabaseConnector : connectToDatabase()
+DatabaseConnector --> Application : establishConnection()
+MaliciousInsider ..> ConfigFile : readConfigFile()
+MaliciousInsider ..> ConfigManager : extractCredentials()
